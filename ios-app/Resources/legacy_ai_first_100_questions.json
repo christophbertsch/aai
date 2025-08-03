@@ -1,0 +1,502 @@
+[
+  {
+    "module": "Origins & Childhood",
+    "question_number": 1,
+    "question": "What\u2019s your earliest memory?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 2,
+    "question": "Where were you born, and what do you remember about it?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 3,
+    "question": "Describe the home you grew up in."
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 4,
+    "question": "What did a typical day look like in your childhood?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 5,
+    "question": "Who made you feel safe growing up?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 6,
+    "question": "What kind of child were you?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 7,
+    "question": "What were your favorite games or activities?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 8,
+    "question": "What foods remind you of your childhood?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 9,
+    "question": "What was your relationship with your parents like?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 10,
+    "question": "How did your family express love?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 11,
+    "question": "What\u2019s a funny or embarrassing memory from childhood?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 12,
+    "question": "Who were your childhood heroes?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 13,
+    "question": "Did you have any pets? What were they like?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 14,
+    "question": "What did you want to be when you grew up?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 15,
+    "question": "How did your culture shape your childhood?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 16,
+    "question": "Did you feel different from other kids?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 17,
+    "question": "What was your favorite holiday or celebration?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 18,
+    "question": "What\u2019s a sound or smell that brings back memories?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 19,
+    "question": "Did you have a nickname? How did you get it?"
+  },
+  {
+    "module": "Origins & Childhood",
+    "question_number": 20,
+    "question": "What childhood moment shaped you forever?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 1,
+    "question": "What do you know about your ancestors?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 2,
+    "question": "What country or region does your family originate from?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 3,
+    "question": "What family traditions did you grow up with?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 4,
+    "question": "Who told stories in your family?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 5,
+    "question": "What did your grandparents teach you?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 6,
+    "question": "Do you resemble anyone in your family?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 7,
+    "question": "What\u2019s a powerful family memory you hold?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 8,
+    "question": "What family values were important to you?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 9,
+    "question": "Was your family religious or spiritual?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 10,
+    "question": "What sacrifices did your family make for you?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 11,
+    "question": "How did your family handle conflict?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 12,
+    "question": "What are you proud of in your family history?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 13,
+    "question": "What language(s) were spoken in your household?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 14,
+    "question": "What family heirlooms do you cherish?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 15,
+    "question": "What role did music or art play in your family?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 16,
+    "question": "Did your family ever struggle with shame or silence?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 17,
+    "question": "Have you researched your genealogy?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 18,
+    "question": "What does the word 'family' mean to you now?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 19,
+    "question": "What traits or traditions do you want to pass on?"
+  },
+  {
+    "module": "Family & Lineage",
+    "question_number": 20,
+    "question": "If you could talk to an ancestor, what would you ask?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 1,
+    "question": "What were your teenage years like?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 2,
+    "question": "Who influenced you most as a teen?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 3,
+    "question": "What was school like for you?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 4,
+    "question": "Did you feel like you fit in or stand out?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 5,
+    "question": "What hobbies or passions did you develop?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 6,
+    "question": "What were your first experiences with independence?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 7,
+    "question": "Did you experience rebellion or conformity?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 8,
+    "question": "Who were your closest friends in adolescence?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 9,
+    "question": "What challenges did you face growing up?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 10,
+    "question": "What made you feel proud as a teen?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 11,
+    "question": "How did you express yourself creatively?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 12,
+    "question": "What was your first heartbreak?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 13,
+    "question": "What role did media or music play in your identity?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 14,
+    "question": "Did you question authority or social norms?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 15,
+    "question": "How did you view adults at that time?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 16,
+    "question": "What were your dreams for the future?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 17,
+    "question": "Did you journal or document your teenage life?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 18,
+    "question": "How did you navigate body image or self-esteem?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 19,
+    "question": "Did your identity conflict with your environment?"
+  },
+  {
+    "module": "Adolescence & Identity",
+    "question_number": 20,
+    "question": "What part of your teen self still lives in you today?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 1,
+    "question": "What was your first job, and what did it teach you?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 2,
+    "question": "How did you choose your career path?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 3,
+    "question": "Did you feel called to your work or fall into it?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 4,
+    "question": "What job gave you the most satisfaction?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 5,
+    "question": "Who were your mentors or role models at work?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 6,
+    "question": "Did you ever face discrimination or challenges in your career?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 7,
+    "question": "What values guided your professional life?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 8,
+    "question": "How did your work affect your personal life?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 9,
+    "question": "What\u2019s something you\u2019re proud of achieving professionally?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 10,
+    "question": "What was your biggest professional failure and lesson?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 11,
+    "question": "How did you deal with stress in your career?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 12,
+    "question": "Did you ever change paths or reinvent yourself?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 13,
+    "question": "How did retirement (or planning for it) feel?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 14,
+    "question": "What would you tell someone starting their career?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 15,
+    "question": "What role did money play in your work choices?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 16,
+    "question": "How did you define success?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 17,
+    "question": "What did leadership mean to you?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 18,
+    "question": "Were you more of a team player or independent worker?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 19,
+    "question": "What legacy did you leave through your work?"
+  },
+  {
+    "module": "Work & Purpose",
+    "question_number": 20,
+    "question": "If you could redo your work life, what would you change?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 1,
+    "question": "How did you learn what love is?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 2,
+    "question": "Who was your first romantic partner?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 3,
+    "question": "What did you value in a relationship?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 4,
+    "question": "How did you meet your life partner (if applicable)?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 5,
+    "question": "What made your relationship(s) strong?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 6,
+    "question": "How did you handle conflict in relationships?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 7,
+    "question": "What surprised you about love?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 8,
+    "question": "How did love change over the years?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 9,
+    "question": "Did you ever experience betrayal or heartbreak?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 10,
+    "question": "How did you heal from loss in love?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 11,
+    "question": "What role did intimacy play in your relationships?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 12,
+    "question": "How did culture or family affect your partnerships?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 13,
+    "question": "What makes a relationship last?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 14,
+    "question": "What advice would you give to young couples?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 15,
+    "question": "What relationship do you wish you had handled differently?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 16,
+    "question": "What does commitment mean to you?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 17,
+    "question": "How did you maintain your individuality in relationships?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 18,
+    "question": "Did you ever struggle to find or keep love?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 19,
+    "question": "What did you learn about forgiveness in love?"
+  },
+  {
+    "module": "Love & Relationships",
+    "question_number": 20,
+    "question": "What would you want your partner(s) to know forever?"
+  }
+]
