@@ -3,7 +3,7 @@ services:
     name: aai-cloud-backend
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python aai_cloud_backend.py
+    startCommand: gunicorn --bind 0.0.0.0:$PORT aai_cloud_backend:app
     envVars:
       - key: QDRANT_URL
         value: http://34.40.104.64:6333
@@ -11,6 +11,4 @@ services:
         value: aai_comprehensive_automotive
       - key: MODEL_NAME
         value: all-MiniLM-L6-v2
-      - key: PORT
-        value: 10000
     plan: free
