@@ -10,6 +10,14 @@
       "dest": "https://your-backend-url.com/api/$1"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/vite.svg",
+      "dest": "/vite.svg"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
