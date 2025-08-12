@@ -9,6 +9,7 @@ import {
   Activity
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import apiService from '../services/api'
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -32,10 +33,16 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Mock data - replace with actual API calls
+      // Fetch collections data
+      const collectionsData = await apiService.getCollections()
+      const collections = collectionsData.result?.collections || []
+      
+      // Fetch analytics data
+      const analyticsData = await apiService.getAnalytics()
+      
       setStats({
-        totalCollections: 2,
-        totalPoints: 38,
+        totalCollections: collections.length,
+        totalPoints: analyticsData.totalRecords || 0,
         lastImport: new Date().toISOString(),
         systemStatus: 'healthy'
       })

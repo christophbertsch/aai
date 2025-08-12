@@ -90,11 +90,11 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, title, emptyMessa
                         </td>
                         <td>
                           <span className={`badge ${
-                            product.availability 
+                            product.availability === 'Available'
                               ? 'badge-success' 
                               : 'badge-warning'
                           }`}>
-                            {product.availability ? 'Available' : 'Out of Stock'}
+                            {product.availability || 'Unknown'}
                           </span>
                         </td>
                         <td>
@@ -134,6 +134,13 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({
   brand2Name
 }) => {
   const [activeTab, setActiveTab] = useState<'summary' | 'unique1' | 'unique2' | 'common'>('summary');
+  
+  // Debug logging
+  console.log('AnalysisResults received:', result);
+  console.log('Brand1 products count:', result.brand1Products.length);
+  console.log('Brand2 products count:', result.brand2Products.length);
+  console.log('Unique to brand1:', result.uniqueToBrand1.length);
+  console.log('Unique to brand2:', result.uniqueToBrand2.length);
 
   const tabs = [
     { id: 'summary', label: 'Summary', count: null },
