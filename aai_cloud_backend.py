@@ -10,6 +10,7 @@ Designed for deployment on Vercel, Render, or similar cloud platforms.
 import os
 import json
 import logging
+import time
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 import uuid
@@ -31,6 +32,13 @@ CORS(app, origins=["*"])  # Allow all origins for cloud deployment
 QDRANT_URL = os.getenv('QDRANT_URL', 'http://34.40.104.64:6333')
 COLLECTION_NAME = os.getenv('COLLECTION_NAME', 'aai_comprehensive_automotive')
 MODEL_NAME = os.getenv('MODEL_NAME', 'all-MiniLM-L6-v2')
+
+# Validate and fix QDRANT_URL if needed
+if not QDRANT_URL.startswith(('http://', 'https://')):
+    # If QDRANT_URL doesn't have a scheme, it might be misconfigured
+    # Use the default URL as fallback
+    logger.warning(f"Invalid QDRANT_URL detected: {QDRANT_URL}. Using default.")
+    QDRANT_URL = 'http://34.40.104.64:6333'
 
 # Global variables
 embedding_model = None
@@ -283,24 +291,21 @@ def get_collections():
             "error": f"Failed to connect to Qdrant: {str(e)}"
         }), 500
 
-@app.route('/api/import', methods=['POST'])
-def start_import():
-    """Import endpoint (informational only for cloud deployment)"""
-    data = request.get_json()
-    collection_name = data.get('collection_name', COLLECTION_NAME)
-    
+@app.route('/api/discover', methods=['GET'])
+def discover_files():
+    """Discover files endpoint (informational only for cloud deployment)"""
     return jsonify({
         "status": "info",
-        "message": "Import functionality requires local micro-agent system",
+        "message": "File discovery requires local micro-agent system",
+        "files": [],
+        "total": 0,
+        "agents": [],
         "instructions": [
             "1. Clone the repository locally",
             "2. Run: python3 aai_import_system.py",
-            "3. Data will be imported to external Qdrant",
-            "4. Frontend will automatically show new data"
-        ],
-        "micro_agent_script": "/workspace/aai_import_system.py",
-        "target_collection": collection_name,
-        "external_qdrant": QDRANT_URL
+            "3. Local system will discover and process files",
+            "4. Data will be imported to external Qdrant"
+        ]
     })
 
 # Initialize model on startup (Flask 3.0+ compatible)
