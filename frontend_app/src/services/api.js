@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API configuration - Updated to connect to cloud backend
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://aai-cloud-backend.vercel.app/api'  // Cloud backend URL (update after deployment)
+  ? 'https://aai-uhm0.onrender.com/api'  // Cloud backend URL (update after deployment)
   : 'http://localhost:5005/api';  // Local development
 
 // External Qdrant configuration
