@@ -224,6 +224,60 @@ def discover_files():
         ]
     })
 
+@app.route('/api/search', methods=['POST'])
+def search_data():
+    """Search endpoint for AAI data"""
+    try:
+        data = request.get_json()
+        query = data.get('query', '')
+        limit = data.get('limit', 10)
+        
+        if not query:
+            return jsonify({"error": "Query parameter is required"}), 400
+        
+        logger.info(f"🔍 Searching for: {query}")
+        
+        # Create a simple embedding for the query (mock embedding)
+        import hashlib
+        import random
+        
+        # Create a deterministic but varied embedding based on query
+        random.seed(hashlib.md5(query.encode()).hexdigest())
+        query_vector = [random.uniform(-1, 1) for _ in range(384)]
+        
+        # Search in Qdrant
+        qdrant_url = get_valid_qdrant_url()
+        search_url = f"{qdrant_url}/collections/{COLLECTION_NAME}/points/search"
+        
+        search_payload = {
+            "vector": query_vector,
+            "limit": limit,
+            "with_payload": True
+        }
+        
+        response = requests.post(search_url, json=search_payload, timeout=10)
+        
+        if response.status_code == 200:
+            results = response.json()
+            return jsonify({
+                "query": query,
+                "results": results.get("result", []),
+                "total": len(results.get("result", [])),
+                "collection": COLLECTION_NAME,
+                "qdrant_url": qdrant_url
+            })
+        else:
+            return jsonify({
+                "error": f"Search failed: {response.status_code}",
+                "details": response.text
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Search error: {e}")
+        return jsonify({
+            "error": f"Search failed: {str(e)}"
+        }), 500
+
 @app.route('/api/import', methods=['POST'])
 def start_import():
     """Import endpoint for AAI data - ACTUALLY STARTS THE IMPORT"""
