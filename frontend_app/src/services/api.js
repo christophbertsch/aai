@@ -2,11 +2,7 @@ import axios from 'axios';
 
 // API configuration - Updated to connect to deployed Render backend
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-<<<<<<< HEAD
   ? 'https://aai-uhm0.onrender.com/api'  // Live Render backend
-=======
-  ? 'https://aai-uhm0.onrender.com/api'  // Cloud backend URL (update after deployment)
->>>>>>> 300edcd22ae34d0b344314c9702007ea401ff2d3
   : 'http://localhost:5005/api';  // Local development
 
 // External Qdrant configuration
