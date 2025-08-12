@@ -1,0 +1,9 @@
+
+> aai-import-frontend@1.0.0 start
+> node server.js
+
+🚀 AAI Frontend Server running on port 55910
+📱 Frontend: http://localhost:55910
+🔌 WebSocket: ws://localhost:55910
+Client connected: RAH0-F11PFJ7rL1TAAAB
+Client disconnected: RAH0-F11PFJ7rL1TAAAB
