@@ -303,16 +303,20 @@ def start_import():
         "external_qdrant": QDRANT_URL
     })
 
-# Initialize model on startup (Flask 2.3+ compatible)
+# Initialize model on startup (Flask 3.0+ compatible)
 def startup():
     """Initialize the application"""
     logger.info("Starting AAI Cloud Backend...")
     initialize_model()
     logger.info("AAI Cloud Backend ready!")
 
-# Register startup function
-with app.app_context():
-    startup()
+# Register startup function for Flask 3.0+
+@app.before_request
+def before_first_request():
+    """Initialize on first request"""
+    if not hasattr(app, '_initialized'):
+        startup()
+        app._initialized = True
 
 if __name__ == '__main__':
     # For local development
