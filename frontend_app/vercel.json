@@ -1,9 +1,9 @@
 {
   "version": 2,
   "name": "aai-data-import-system",
-  "buildCommand": "npm run build",
+  "buildCommand": "npm ci && npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install",
+  "installCommand": "npm ci",
   "routes": [
     {
       "src": "/api/(.*)",
@@ -16,5 +16,7 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "functions": {},
+  "framework": "vite"
 }
