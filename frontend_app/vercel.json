@@ -1,9 +1,9 @@
 {
   "version": 2,
   "name": "aai-data-import-system",
-  "buildCommand": "npm ci && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm ci",
+  "installCommand": "npm install",
   "routes": [
     {
       "src": "/api/(.*)",

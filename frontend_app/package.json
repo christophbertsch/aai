@@ -1,8 +1,8 @@
 {
   "name": "aai-import-frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
-  "description": "AAI Data Import System Frontend",
+  "description": "AAI Data Import System Frontend - Build Dependencies Fixed",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
