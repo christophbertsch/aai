@@ -43,6 +43,14 @@ if not QDRANT_URL.startswith(('http://', 'https://')):
 # Global variables
 embedding_model = None
 
+def get_valid_qdrant_url():
+    """Get a valid Qdrant URL, using fallback if needed"""
+    url = QDRANT_URL
+    if not url.startswith(('http://', 'https://')):
+        logger.warning(f"Invalid QDRANT_URL detected: {url}, using fallback")
+        return 'http://34.40.104.64:6333'
+    return url
+
 def initialize_model():
     """Initialize the embedding model"""
     global embedding_model
@@ -145,7 +153,8 @@ def health_check():
     """Health check endpoint"""
     try:
         # Test Qdrant connection
-        response = requests.get(f"{QDRANT_URL}/collections", timeout=5)
+        health_qdrant_url = get_valid_qdrant_url()
+        response = requests.get(f"{health_qdrant_url}/collections", timeout=5)
         qdrant_status = "connected" if response.status_code == 200 else "error"
     except Exception as e:
         qdrant_status = f"error: {str(e)}"
@@ -165,7 +174,10 @@ def get_stats():
     """Get collection statistics"""
     try:
         # Get collection info from external Qdrant
-        response = requests.get(f"{QDRANT_URL}/collections/{COLLECTION_NAME}", timeout=10)
+        qdrant_url = get_valid_qdrant_url()
+        stats_url = f"{qdrant_url}/collections/{COLLECTION_NAME}"
+        logger.info(f"Requesting stats from: {stats_url}")
+        response = requests.get(stats_url, timeout=10)
         
         if response.status_code == 200:
             data = response.json()
@@ -179,20 +191,21 @@ def get_stats():
                 "vectors_count": result.get('vectors_count', 0),
                 "indexed_vectors_count": result.get('indexed_vectors_count', 0),
                 "config": result.get('config', {}),
-                "qdrant_url": QDRANT_URL,
+                "qdrant_url": qdrant_url,
                 "last_updated": datetime.now().isoformat()
             })
         else:
             return jsonify({
                 "error": f"Failed to get stats from Qdrant: {response.status_code}",
-                "qdrant_url": QDRANT_URL
+                "qdrant_url": qdrant_url
             }), 500
             
     except Exception as e:
         logger.error(f"Error getting stats: {e}")
         return jsonify({
             "error": f"Failed to connect to Qdrant: {str(e)}",
-            "qdrant_url": QDRANT_URL
+            "qdrant_url": get_valid_qdrant_url(),
+            "debug_original_url": QDRANT_URL
         }), 500
 
 @app.route('/api/search', methods=['POST'])
@@ -217,8 +230,9 @@ def search():
             "with_vector": False
         }
         
+        qdrant_url = get_valid_qdrant_url()
         response = requests.post(
-            f"{QDRANT_URL}/collections/{COLLECTION_NAME}/points/search",
+            f"{qdrant_url}/collections/{COLLECTION_NAME}/points/search",
             json=search_payload,
             timeout=10
         )
@@ -267,7 +281,8 @@ def search():
 def get_collections():
     """Get all collections"""
     try:
-        response = requests.get(f"{QDRANT_URL}/collections", timeout=10)
+        qdrant_url = get_valid_qdrant_url()
+        response = requests.get(f"{qdrant_url}/collections", timeout=10)
         
         if response.status_code == 200:
             data = response.json()
@@ -278,7 +293,7 @@ def get_collections():
                     "collections": [{"name": col.get('name')} for col in collections]
                 },
                 "status": "ok",
-                "qdrant_url": QDRANT_URL
+                "qdrant_url": qdrant_url
             })
         else:
             return jsonify({
