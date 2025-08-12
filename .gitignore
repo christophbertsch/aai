@@ -1,0 +1,27 @@
+node_modules/
+
+# Exclude other projects
+product-gap-analyzer/
+0711-*/
+llm-compare/
+membership-registration/
+user-registration-app/
+automotive_uploader/
+buhl-client/
+buhl/
+test-vite/
+CMO/
+
+# Exclude temporary files
+__pycache__/
+*.log
+*.pkl
+.browser_screenshots/
+.vscode/
+.qdrant-initialized
+storage/
+qdrant
+*.tar.gz
+*.xml
+*.pdf
+data/aai/
