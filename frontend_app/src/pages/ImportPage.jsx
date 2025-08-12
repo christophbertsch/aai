@@ -11,7 +11,7 @@ import {
   FileText,
   Database
 } from 'lucide-react'
-import io from 'socket.io-client'
+import { apiService } from '../services/api'
 
 const ImportPage = () => {
   const [selectedFolder, setSelectedFolder] = useState('')
@@ -27,31 +27,35 @@ const ImportPage = () => {
   })
   const [logs, setLogs] = useState([])
   const [fileDiscovery, setFileDiscovery] = useState([])
-  const [socket, setSocket] = useState(null)
+  const [importResult, setImportResult] = useState(null)
 
   useEffect(() => {
-    // Initialize socket connection
-    const newSocket = io('http://localhost:55910')
-    setSocket(newSocket)
-
-    newSocket.on('import_progress', (data) => {
-      setProgress(data)
-    })
-
-    newSocket.on('import_log', (log) => {
-      setLogs(prev => [...prev.slice(-99), { ...log, timestamp: new Date() }])
-    })
-
-    newSocket.on('import_status', (status) => {
-      setImportStatus(status)
-    })
-
-    newSocket.on('file_discovery', (files) => {
-      setFileDiscovery(files)
-    })
-
-    return () => newSocket.close()
+    // Initialize with default values
+    setSelectedFolder('/workspace/data/aai')
+    setCollectionName('aai_comprehensive_automotive')
+    
+    // Load file discovery data
+    loadFileDiscovery()
   }, [])
+
+  const loadFileDiscovery = async () => {
+    try {
+      const discovery = await apiService.scanFiles()
+      setFileDiscovery(discovery.files || [])
+      setLogs(prev => [...prev, {
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: `📊 Discovered ${discovery.total || 0} files across ${discovery.agents?.length || 0} data formats`
+      }])
+    } catch (error) {
+      console.error('File discovery failed:', error)
+      setLogs(prev => [...prev, {
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message: `❌ File discovery failed: ${error.message}`
+      }])
+    }
+  }
 
   const handleFolderSelect = async () => {
     try {
@@ -73,7 +77,7 @@ const ImportPage = () => {
           if (files.length > 0) {
             const folderPath = files[0].webkitRelativePath.split('/')[0]
             setSelectedFolder(folderPath)
-            socket?.emit('discover_files', { files: files.map(f => f.webkitRelativePath) })
+            loadFileDiscovery()
           }
         }
         input.click()
@@ -83,28 +87,76 @@ const ImportPage = () => {
     }
   }
 
-  const startImport = () => {
-    if (!selectedFolder || !collectionName) {
-      alert('Please select a folder and enter a collection name')
+  const startImport = async () => {
+    if (!collectionName) {
+      alert('Please enter a collection name')
       return
     }
 
-    socket?.emit('start_import', {
-      folderPath: selectedFolder,
-      collectionName: collectionName
-    })
+    setImportStatus('running')
+    setLogs(prev => [...prev, {
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: '🚀 Starting AAI Comprehensive Import...'
+    }])
+
+    try {
+      const result = await apiService.startImport(collectionName, fileDiscovery)
+      setImportResult(result)
+      setImportStatus('completed')
+      
+      // Add result instructions to logs
+      if (result.instructions) {
+        result.instructions.forEach(instruction => {
+          setLogs(prev => [...prev, {
+            timestamp: new Date().toISOString(),
+            level: 'info',
+            message: instruction
+          }])
+        })
+      }
+      
+      setLogs(prev => [...prev, {
+        timestamp: new Date().toISOString(),
+        level: 'success',
+        message: `✅ ${result.message || 'Import completed successfully'}`
+      }])
+      
+    } catch (error) {
+      setImportStatus('error')
+      setLogs(prev => [...prev, {
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message: `❌ Import failed: ${error.message}`
+      }])
+    }
   }
 
   const pauseImport = () => {
-    socket?.emit('pause_import')
+    setImportStatus('paused')
+    setLogs(prev => [...prev, {
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: '⏸️ Import paused (local control only)'
+    }])
   }
 
   const resumeImport = () => {
-    socket?.emit('resume_import')
+    setImportStatus('running')
+    setLogs(prev => [...prev, {
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: '▶️ Import resumed (local control only)'
+    }])
   }
 
   const stopImport = () => {
-    socket?.emit('stop_import')
+    setImportStatus('idle')
+    setLogs(prev => [...prev, {
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: '⏹️ Import stopped (local control only)'
+    }])
   }
 
   const getStatusIcon = () => {
@@ -338,12 +390,13 @@ const ImportPage = () => {
             logs.map((log, index) => (
               <div key={index} className="mb-1">
                 <span className="text-gray-500">
-                  [{log.timestamp.toLocaleTimeString()}]
+                  [{new Date(log.timestamp).toLocaleTimeString()}]
                 </span>
                 <span className={`ml-2 ${
                   log.level === 'error' ? 'text-red-400' : 
                   log.level === 'warning' ? 'text-yellow-400' : 
-                  'text-green-400'
+                  log.level === 'success' ? 'text-green-400' :
+                  'text-blue-400'
                 }`}>
                   {log.message}
                 </span>
