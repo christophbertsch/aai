@@ -1,8 +1,10 @@
 // AAI System Connection Configuration
+export const API_BASE_URL = 'https://aai-uhm0.onrender.com';
+
 export const AAI_CONFIG = {
   // Real AAI Search API (currently running)
   SEARCH_API: {
-    url: 'http://localhost:5005',
+    url: API_BASE_URL,
     endpoints: {
       search: '/api/search',
       stats: '/api/stats',

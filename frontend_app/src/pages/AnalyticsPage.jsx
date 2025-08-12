@@ -6,7 +6,13 @@ import {
   Download,
   RefreshCw,
   Calendar,
-  Filter
+  Filter,
+  Car,
+  Wrench,
+  Target,
+  Activity,
+  Zap,
+  Award
 } from 'lucide-react'
 import { 
   BarChart, 
@@ -23,97 +29,73 @@ import {
   Area,
   AreaChart
 } from 'recharts'
+import { API_BASE_URL } from '../config/connections'
 
 const AnalyticsPage = () => {
-  const [analytics, setAnalytics] = useState({
-    overview: {},
-    sourceDistribution: [],
-    importTrends: [],
-    searchPatterns: [],
-    topQueries: []
-  })
-  const [selectedTimeRange, setSelectedTimeRange] = useState('7d')
+  const [dashboardData, setDashboardData] = useState(null)
+  const [brandData, setBrandData] = useState(null)
+  const [partsData, setPartsData] = useState(null)
+  const [competitiveData, setCompetitiveData] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [activeAnalysis, setActiveAnalysis] = useState('dashboard')
 
-  const timeRanges = [
-    { value: '1d', label: 'Last 24 Hours' },
-    { value: '7d', label: 'Last 7 Days' },
-    { value: '30d', label: 'Last 30 Days' },
-    { value: '90d', label: 'Last 90 Days' }
-  ]
-
-  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16']
 
   useEffect(() => {
-    fetchAnalytics()
-  }, [selectedTimeRange])
+    fetchDashboard()
+  }, [])
 
-  const fetchAnalytics = async () => {
+  const fetchDashboard = async () => {
     setIsLoading(true)
     try {
-      // Mock data - replace with actual API calls
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      setAnalytics({
-        overview: {
-          totalRecords: 1250000,
-          totalCollections: 5,
-          avgSearchTime: 0.15,
-          successRate: 98.5
-        },
-        sourceDistribution: [
-          { name: 'TecDoc', value: 850000, percentage: 68 },
-          { name: 'AutoCare', value: 200000, percentage: 16 },
-          { name: 'MM', value: 120000, percentage: 9.6 },
-          { name: 'IA', value: 50000, percentage: 4 },
-          { name: 'Polk', value: 25000, percentage: 2 },
-          { name: 'Others', value: 5000, percentage: 0.4 }
-        ],
-        importTrends: [
-          { date: '2024-01-01', records: 50000, files: 120 },
-          { date: '2024-01-02', records: 75000, files: 180 },
-          { date: '2024-01-03', records: 120000, files: 250 },
-          { date: '2024-01-04', records: 200000, files: 400 },
-          { date: '2024-01-05', records: 180000, files: 350 },
-          { date: '2024-01-06', records: 220000, files: 450 },
-          { date: '2024-01-07', records: 250000, files: 500 }
-        ],
-        searchPatterns: [
-          { hour: 0, searches: 45 },
-          { hour: 1, searches: 32 },
-          { hour: 2, searches: 28 },
-          { hour: 3, searches: 25 },
-          { hour: 4, searches: 30 },
-          { hour: 5, searches: 40 },
-          { hour: 6, searches: 65 },
-          { hour: 7, searches: 85 },
-          { hour: 8, searches: 120 },
-          { hour: 9, searches: 150 },
-          { hour: 10, searches: 180 },
-          { hour: 11, searches: 200 },
-          { hour: 12, searches: 190 },
-          { hour: 13, searches: 210 },
-          { hour: 14, searches: 220 },
-          { hour: 15, searches: 195 },
-          { hour: 16, searches: 175 },
-          { hour: 17, searches: 160 },
-          { hour: 18, searches: 140 },
-          { hour: 19, searches: 110 },
-          { hour: 20, searches: 90 },
-          { hour: 21, searches: 75 },
-          { hour: 22, searches: 60 },
-          { hour: 23, searches: 50 }
-        ],
-        topQueries: [
-          { query: 'brake pads BMW', count: 1250, avgScore: 0.85 },
-          { query: 'oil filter Mercedes', count: 980, avgScore: 0.82 },
-          { query: 'spark plugs Audi', count: 875, avgScore: 0.88 },
-          { query: 'transmission fluid', count: 720, avgScore: 0.79 },
-          { query: 'air filter Honda', count: 650, avgScore: 0.86 }
-        ]
-      })
+      const response = await fetch(`${API_BASE_URL}/api/analytics/dashboard`)
+      const data = await response.json()
+      setDashboardData(data)
+      setActiveAnalysis('dashboard')
     } catch (error) {
-      console.error('Error fetching analytics:', error)
+      console.error('Error fetching dashboard:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchBrandAnalysis = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/analytics/brands`)
+      const data = await response.json()
+      setBrandData(data)
+      setActiveAnalysis('brands')
+    } catch (error) {
+      console.error('Error fetching brand analysis:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchPartsAnalysis = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/analytics/parts`)
+      const data = await response.json()
+      setPartsData(data)
+      setActiveAnalysis('parts')
+    } catch (error) {
+      console.error('Error fetching parts analysis:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchCompetitiveAnalysis = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/analytics/competitive`)
+      const data = await response.json()
+      setCompetitiveData(data)
+      setActiveAnalysis('competitive')
+    } catch (error) {
+      console.error('Error fetching competitive analysis:', error)
     } finally {
       setIsLoading(false)
     }
@@ -143,25 +125,14 @@ const AnalyticsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-900">🔍 Market Intelligence & Analytics</h1>
           <p className="mt-2 text-gray-600">
-            Insights and metrics for your AAI data import system
+            Real-time automotive industry insights from 1,007 data points
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <select
-            value={selectedTimeRange}
-            onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="input-field w-auto"
-          >
-            {timeRanges.map((range) => (
-              <option key={range.value} value={range.value}>
-                {range.label}
-              </option>
-            ))}
-          </select>
           <button
-            onClick={fetchAnalytics}
+            onClick={fetchDashboard}
             disabled={isLoading}
             className="btn-secondary flex items-center"
           >
@@ -171,180 +142,354 @@ const AnalyticsPage = () => {
         </div>
       </div>
 
-      {/* Overview Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          title="Total Records"
-          value={analytics.overview.totalRecords?.toLocaleString() || '0'}
-          change={12.5}
-          icon={BarChart3}
-          color="blue"
-        />
-        <MetricCard
-          title="Collections"
-          value={analytics.overview.totalCollections || '0'}
-          change={25}
-          icon={PieChart}
-          color="green"
-        />
-        <MetricCard
-          title="Avg Search Time"
-          value={`${analytics.overview.avgSearchTime || 0}s`}
-          change={-8.2}
-          icon={TrendingUp}
-          color="purple"
-        />
-        <MetricCard
-          title="Success Rate"
-          value={`${analytics.overview.successRate || 0}%`}
-          change={2.1}
-          icon={TrendingUp}
-          color="green"
-        />
+      {/* Analytics Action Buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button
+          onClick={fetchDashboard}
+          disabled={isLoading}
+          className={`p-6 rounded-lg border-2 transition-all ${
+            activeAnalysis === 'dashboard' 
+              ? 'border-blue-500 bg-blue-50' 
+              : 'border-gray-200 hover:border-blue-300'
+          }`}
+        >
+          <Activity className="h-8 w-8 text-blue-600 mb-3" />
+          <h3 className="font-semibold text-gray-900">Dashboard Overview</h3>
+          <p className="text-sm text-gray-600 mt-1">System metrics & KPIs</p>
+        </button>
+
+        <button
+          onClick={fetchBrandAnalysis}
+          disabled={isLoading}
+          className={`p-6 rounded-lg border-2 transition-all ${
+            activeAnalysis === 'brands' 
+              ? 'border-green-500 bg-green-50' 
+              : 'border-gray-200 hover:border-green-300'
+          }`}
+        >
+          <Car className="h-8 w-8 text-green-600 mb-3" />
+          <h3 className="font-semibold text-gray-900">Brand Analysis</h3>
+          <p className="text-sm text-gray-600 mt-1">Compare major automotive brands</p>
+        </button>
+
+        <button
+          onClick={fetchPartsAnalysis}
+          disabled={isLoading}
+          className={`p-6 rounded-lg border-2 transition-all ${
+            activeAnalysis === 'parts' 
+              ? 'border-orange-500 bg-orange-50' 
+              : 'border-gray-200 hover:border-orange-300'
+          }`}
+        >
+          <Wrench className="h-8 w-8 text-orange-600 mb-3" />
+          <h3 className="font-semibold text-gray-900">Parts Intelligence</h3>
+          <p className="text-sm text-gray-600 mt-1">Category analysis & trends</p>
+        </button>
+
+        <button
+          onClick={fetchCompetitiveAnalysis}
+          disabled={isLoading}
+          className={`p-6 rounded-lg border-2 transition-all ${
+            activeAnalysis === 'competitive' 
+              ? 'border-purple-500 bg-purple-50' 
+              : 'border-gray-200 hover:border-purple-300'
+          }`}
+        >
+          <Target className="h-8 w-8 text-purple-600 mb-3" />
+          <h3 className="font-semibold text-gray-900">Competitive Intel</h3>
+          <p className="text-sm text-gray-600 mt-1">Market gaps & opportunities</p>
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Data Source Distribution */}
-        <div className="card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Data Source Distribution</h3>
-            <button className="btn-secondary flex items-center text-sm">
-              <Download className="h-4 w-4 mr-1" />
-              Export
-            </button>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+            <p className="text-gray-600">Analyzing automotive data...</p>
           </div>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <RechartsPieChart>
-                <RechartsPieChart
-                  data={analytics.sourceDistribution}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                >
-                  {analytics.sourceDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+        </div>
+      )}
+
+      {/* Dashboard Overview */}
+      {activeAnalysis === 'dashboard' && dashboardData && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard
+              title="Total Data Points"
+              value={dashboardData.kpis?.data_points?.toLocaleString() || '0'}
+              icon={BarChart3}
+              color="blue"
+            />
+            <MetricCard
+              title="Data Sources"
+              value={dashboardData.kpis?.sources_integrated || '0'}
+              icon={PieChart}
+              color="green"
+            />
+            <MetricCard
+              title="File Types"
+              value={dashboardData.kpis?.file_types_supported || '0'}
+              icon={TrendingUp}
+              color="purple"
+            />
+            <MetricCard
+              title="Search Ready"
+              value={dashboardData.kpis?.search_ready ? "✅ Yes" : "❌ No"}
+              icon={Zap}
+              color="green"
+            />
+          </div>
+
+          {dashboardData.dashboard_data && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="card p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Sources</h3>
+                <div className="space-y-3">
+                  {Object.entries(dashboardData.dashboard_data.data_distribution.data_sources).map(([source, count], index) => (
+                    <div key={source} className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div 
+                          className="w-4 h-4 rounded-full mr-3"
+                          style={{ backgroundColor: colors[index % colors.length] }}
+                        ></div>
+                        <span className="font-medium">{source}</span>
+                      </div>
+                      <span className="text-gray-600">{count} points</span>
+                    </div>
                   ))}
-                </RechartsPieChart>
-                <Tooltip formatter={(value) => value.toLocaleString()} />
-              </RechartsPieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            {analytics.sourceDistribution.map((item, index) => (
-              <div key={item.name} className="flex items-center">
-                <div 
-                  className="w-3 h-3 rounded-full mr-2"
-                  style={{ backgroundColor: colors[index % colors.length] }}
-                ></div>
-                <span className="text-sm text-gray-600">
-                  {item.name} ({item.percentage}%)
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Import Trends */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Import Trends</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={analytics.importTrends}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={(value) => new Date(value).toLocaleDateString()}
-                />
-                <YAxis />
-                <Tooltip 
-                  labelFormatter={(value) => new Date(value).toLocaleDateString()}
-                  formatter={(value) => [value.toLocaleString(), 'Records']}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="records" 
-                  stroke="#3b82f6" 
-                  fill="#3b82f6" 
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Search Patterns */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Search Patterns (24h)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={analytics.searchPatterns}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="hour" tickFormatter={(value) => `${value}:00`} />
-                <YAxis />
-                <Tooltip labelFormatter={(value) => `${value}:00`} />
-                <Line 
-                  type="monotone" 
-                  dataKey="searches" 
-                  stroke="#10b981" 
-                  strokeWidth={2}
-                  dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Top Search Queries */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Search Queries</h3>
-          <div className="space-y-3">
-            {analytics.topQueries.map((query, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{query.query}</p>
-                  <p className="text-sm text-gray-500">
-                    {query.count} searches • Avg score: {query.avgScore}
-                  </p>
                 </div>
-                <div className="text-right">
-                  <div className="w-16 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full" 
-                      style={{ width: `${(query.count / analytics.topQueries[0]?.count) * 100}%` }}
-                    ></div>
+              </div>
+
+              <div className="card p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Insights</h3>
+                <div className="space-y-4">
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <p className="font-medium text-blue-900">Primary Source</p>
+                    <p className="text-blue-700">{dashboardData.dashboard_data.quick_insights.primary_source}</p>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <p className="font-medium text-green-900">Data Richness Score</p>
+                    <p className="text-green-700">{dashboardData.dashboard_data.quick_insights.data_richness_score}/100</p>
+                  </div>
+                  <div className="p-3 bg-purple-50 rounded-lg">
+                    <p className="font-medium text-purple-900">Coverage Completeness</p>
+                    <p className="text-purple-700">{dashboardData.dashboard_data.quick_insights.coverage_completeness}%</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Performance Insights */}
-      <div className="card p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Insights</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-medium text-blue-900 mb-2">Most Active Agent</h4>
-            <p className="text-2xl font-bold text-blue-600">TecDoc</p>
-            <p className="text-sm text-blue-700">68% of all data</p>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <h4 className="font-medium text-green-900 mb-2">Peak Search Hour</h4>
-            <p className="text-2xl font-bold text-green-600">2:00 PM</p>
-            <p className="text-sm text-green-700">220 searches/hour</p>
-          </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <h4 className="font-medium text-purple-900 mb-2">Best Search Agent</h4>
-            <p className="text-2xl font-bold text-purple-600">Semantic</p>
-            <p className="text-sm text-purple-700">0.85 avg score</p>
+      {/* Brand Analysis */}
+      {activeAnalysis === 'brands' && brandData && (
+        <div className="space-y-6">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">🏆 Brand Market Analysis</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="text-center p-4 bg-gold-50 rounded-lg border border-yellow-200">
+                <Award className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
+                <h4 className="font-medium text-yellow-900">Top Brand</h4>
+                <p className="text-2xl font-bold text-yellow-600">{brandData.insights?.top_brand || 'N/A'}</p>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <h4 className="font-medium text-blue-900">Brands Analyzed</h4>
+                <p className="text-2xl font-bold text-blue-600">{brandData.total_brands_analyzed || 0}</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <h4 className="font-medium text-green-900">Data Points</h4>
+                <p className="text-2xl font-bold text-green-600">{brandData.total_data_points || 0}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Brand Mentions</h4>
+                <div className="space-y-2">
+                  {Object.entries(brandData.brands || {})
+                    .sort(([,a], [,b]) => b.mentions - a.mentions)
+                    .slice(0, 8)
+                    .map(([brand, data], index) => (
+                    <div key={brand} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="font-medium">{brand}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-600">{data.mentions} mentions</span>
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full" 
+                            style={{ 
+                              width: `${(data.mentions / Math.max(...Object.values(brandData.brands).map(b => b.mentions))) * 100}%` 
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">File Coverage</h4>
+                <div className="space-y-2">
+                  {Object.entries(brandData.insights?.data_richness || {})
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 8)
+                    .map(([brand, fileCount]) => (
+                    <div key={brand} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="font-medium">{brand}</span>
+                      <span className="text-sm text-gray-600">{fileCount} files</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Parts Analysis */}
+      {activeAnalysis === 'parts' && partsData && (
+        <div className="space-y-6">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">🔧 Parts Category Intelligence</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="text-center p-4 bg-orange-50 rounded-lg">
+                <Wrench className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <h4 className="font-medium text-orange-900">Top Category</h4>
+                <p className="text-2xl font-bold text-orange-600">{partsData.market_insights?.top_category || 'N/A'}</p>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <h4 className="font-medium text-blue-900">Categories</h4>
+                <p className="text-2xl font-bold text-blue-600">{partsData.total_categories || 0}</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <h4 className="font-medium text-green-900">Data Points</h4>
+                <p className="text-2xl font-bold text-green-600">{partsData.total_data_points || 0}</p>
+              </div>
+            </div>
+
+            <div className="h-64 mb-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={Object.entries(partsData.market_insights?.coverage_distribution || {}).map(([category, mentions]) => ({
+                  category,
+                  mentions
+                }))}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="category" angle={-45} textAnchor="end" height={80} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="mentions" fill="#f97316" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Category Coverage</h4>
+                <div className="space-y-2">
+                  {Object.entries(partsData.market_insights?.coverage_distribution || {})
+                    .sort(([,a], [,b]) => b - a)
+                    .map(([category, mentions]) => (
+                    <div key={category} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="font-medium">{category}</span>
+                      <span className="text-sm text-gray-600">{mentions} mentions</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Brand Coverage by Category</h4>
+                <div className="space-y-2">
+                  {Object.entries(partsData.market_insights?.brand_coverage || {})
+                    .sort(([,a], [,b]) => b - a)
+                    .map(([category, brandCount]) => (
+                    <div key={category} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="font-medium">{category}</span>
+                      <span className="text-sm text-gray-600">{brandCount} brands</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Competitive Analysis */}
+      {activeAnalysis === 'competitive' && competitiveData && (
+        <div className="space-y-6">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">🎯 Competitive Intelligence</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <Target className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                <h4 className="font-medium text-purple-900">Dominant Segment</h4>
+                <p className="text-2xl font-bold text-purple-600">{competitiveData.market_insights?.dominant_segment || 'N/A'}</p>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <h4 className="font-medium text-blue-900">Coverage Ratio</h4>
+                <p className="text-2xl font-bold text-blue-600">{Math.round((competitiveData.market_insights?.coverage_ratio || 0) * 100)}%</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <h4 className="font-medium text-green-900">Total Mentions</h4>
+                <p className="text-2xl font-bold text-green-600">{competitiveData.market_insights?.total_competitive_mentions || 0}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Market Segments</h4>
+                <div className="space-y-3">
+                  {Object.entries(competitiveData.segments || {}).map(([segment, data]) => (
+                    <div key={segment} className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{segment}</span>
+                        <span className="text-sm text-gray-600">{data.total_mentions} mentions</span>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {data.data_coverage} brands covered
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Strategic Recommendations</h4>
+                <div className="space-y-2">
+                  {(competitiveData.recommendations || []).map((rec, index) => (
+                    <div key={index} className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                      <p className="text-sm text-blue-800">{rec}</p>
+                    </div>
+                  ))}
+                </div>
+                
+                {competitiveData.market_insights?.market_gaps?.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="font-medium text-gray-900 mb-2">Market Gaps</h5>
+                    <div className="flex flex-wrap gap-2">
+                      {competitiveData.market_insights.market_gaps.map((gap) => (
+                        <span key={gap} className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                          {gap}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
