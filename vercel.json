@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "name": "aai-cloud-backend",
+  "builds": [
+    {
+      "src": "aai_cloud_backend.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "aai_cloud_backend.py"
+    }
+  ],
+  "env": {
+    "QDRANT_URL": "http://34.40.104.64:6333",
+    "COLLECTION_NAME": "aai_comprehensive_automotive",
+    "MODEL_NAME": "all-MiniLM-L6-v2"
+  },
+  "functions": {
+    "aai_cloud_backend.py": {
+      "maxDuration": 30
+    }
+  }
+}
