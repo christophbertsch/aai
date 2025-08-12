@@ -107,6 +107,31 @@ def home():
                 <strong>POST /api/import</strong><br>
                 Import endpoint (informational)
             </div>
+            
+            <div class="endpoint">
+                <strong>POST /api/search</strong><br>
+                Search automotive data with AI embeddings
+            </div>
+            
+            <div class="endpoint">
+                <strong>GET /api/analytics/brands</strong><br>
+                Brand comparison and gap analysis
+            </div>
+            
+            <div class="endpoint">
+                <strong>GET /api/analytics/parts</strong><br>
+                Parts category analysis and market intelligence
+            </div>
+            
+            <div class="endpoint">
+                <strong>GET /api/analytics/competitive</strong><br>
+                Competitive analysis and market gaps
+            </div>
+            
+            <div class="endpoint">
+                <strong>GET /api/analytics/dashboard</strong><br>
+                Comprehensive analytics dashboard data
+            </div>
 
             <h2>🔗 External Links</h2>
             <p>
@@ -277,6 +302,319 @@ def search_data():
         return jsonify({
             "error": f"Search failed: {str(e)}"
         }), 500
+
+@app.route('/api/analytics/brands', methods=['GET'])
+def brand_analysis():
+    """Brand comparison and gap analysis"""
+    try:
+        qdrant_url = get_valid_qdrant_url()
+        
+        # Get all points to analyze brands
+        scroll_url = f"{qdrant_url}/collections/{COLLECTION_NAME}/points/scroll"
+        response = requests.post(scroll_url, json={"limit": 1000, "with_payload": True}, timeout=30)
+        
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch data"}), 500
+            
+        points = response.json().get("result", {}).get("points", [])
+        
+        # Analyze brand mentions
+        brand_analysis = {}
+        major_brands = ["BMW", "Mercedes", "Audi", "Volkswagen", "Ford", "Toyota", "Honda", "Nissan", "Chevrolet", "Dodge"]
+        
+        for point in points:
+            content = point.get("payload", {}).get("content", "").upper()
+            for brand in major_brands:
+                if brand.upper() in content:
+                    if brand not in brand_analysis:
+                        brand_analysis[brand] = {
+                            "mentions": 0,
+                            "files": set(),
+                            "categories": set(),
+                            "parts": []
+                        }
+                    brand_analysis[brand]["mentions"] += 1
+                    brand_analysis[brand]["files"].add(point.get("payload", {}).get("file_name", ""))
+                    
+                    # Extract part information
+                    lines = content.split('\n')
+                    for line in lines:
+                        if brand.upper() in line and any(part in line.upper() for part in ["BRAKE", "ENGINE", "FILTER", "OIL", "SPARK"]):
+                            brand_analysis[brand]["parts"].append(line.strip()[:100])
+        
+        # Convert sets to lists for JSON serialization
+        for brand in brand_analysis:
+            brand_analysis[brand]["files"] = list(brand_analysis[brand]["files"])
+            brand_analysis[brand]["categories"] = list(brand_analysis[brand]["categories"])
+            brand_analysis[brand]["file_count"] = len(brand_analysis[brand]["files"])
+        
+        # Sort by mentions
+        sorted_brands = dict(sorted(brand_analysis.items(), key=lambda x: x[1]["mentions"], reverse=True))
+        
+        return jsonify({
+            "analysis_type": "brand_comparison",
+            "total_brands_analyzed": len(sorted_brands),
+            "total_data_points": len(points),
+            "brands": sorted_brands,
+            "insights": {
+                "top_brand": max(sorted_brands.keys(), key=lambda x: sorted_brands[x]["mentions"]) if sorted_brands else None,
+                "coverage_gaps": [brand for brand in major_brands if brand not in sorted_brands],
+                "data_richness": {brand: data["file_count"] for brand, data in sorted_brands.items()}
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Brand analysis error: {e}")
+        return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
+
+@app.route('/api/analytics/parts', methods=['GET'])
+def parts_analysis():
+    """Parts category analysis and market intelligence"""
+    try:
+        qdrant_url = get_valid_qdrant_url()
+        
+        # Get sample of points for analysis
+        scroll_url = f"{qdrant_url}/collections/{COLLECTION_NAME}/points/scroll"
+        response = requests.post(scroll_url, json={"limit": 1000, "with_payload": True}, timeout=30)
+        
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch data"}), 500
+            
+        points = response.json().get("result", {}).get("points", [])
+        
+        # Analyze parts categories
+        parts_categories = {
+            "Engine": ["ENGINE", "PISTON", "CYLINDER", "VALVE", "CAMSHAFT", "CRANKSHAFT"],
+            "Brakes": ["BRAKE", "PAD", "ROTOR", "CALIPER", "DISC"],
+            "Suspension": ["SHOCK", "STRUT", "SPRING", "SUSPENSION"],
+            "Electrical": ["BATTERY", "ALTERNATOR", "STARTER", "IGNITION", "SPARK"],
+            "Filters": ["FILTER", "AIR FILTER", "OIL FILTER", "FUEL FILTER"],
+            "Transmission": ["TRANSMISSION", "CLUTCH", "GEAR", "DIFFERENTIAL"],
+            "Cooling": ["RADIATOR", "COOLANT", "THERMOSTAT", "WATER PUMP"],
+            "Fuel System": ["FUEL", "INJECTOR", "PUMP", "CARBURETOR"]
+        }
+        
+        category_analysis = {}
+        
+        for category, keywords in parts_categories.items():
+            category_analysis[category] = {
+                "mentions": 0,
+                "files": set(),
+                "parts_found": [],
+                "brands_associated": set()
+            }
+            
+            for point in points:
+                content = point.get("payload", {}).get("content", "").upper()
+                file_name = point.get("payload", {}).get("file_name", "")
+                
+                for keyword in keywords:
+                    if keyword in content:
+                        category_analysis[category]["mentions"] += content.count(keyword)
+                        category_analysis[category]["files"].add(file_name)
+                        
+                        # Extract specific parts
+                        lines = content.split('\n')
+                        for line in lines:
+                            if keyword in line:
+                                category_analysis[category]["parts_found"].append(line.strip()[:80])
+                                # Look for brand mentions in the same line
+                                for brand in ["BMW", "MERCEDES", "AUDI", "FORD", "TOYOTA"]:
+                                    if brand in line:
+                                        category_analysis[category]["brands_associated"].add(brand)
+        
+        # Convert sets to lists and calculate metrics
+        for category in category_analysis:
+            category_analysis[category]["files"] = list(category_analysis[category]["files"])
+            category_analysis[category]["brands_associated"] = list(category_analysis[category]["brands_associated"])
+            category_analysis[category]["file_count"] = len(category_analysis[category]["files"])
+            category_analysis[category]["brand_count"] = len(category_analysis[category]["brands_associated"])
+            category_analysis[category]["parts_found"] = category_analysis[category]["parts_found"][:10]  # Limit to top 10
+        
+        # Sort by mentions
+        sorted_categories = dict(sorted(category_analysis.items(), key=lambda x: x[1]["mentions"], reverse=True))
+        
+        return jsonify({
+            "analysis_type": "parts_intelligence",
+            "total_categories": len(sorted_categories),
+            "total_data_points": len(points),
+            "categories": sorted_categories,
+            "market_insights": {
+                "top_category": max(sorted_categories.keys(), key=lambda x: sorted_categories[x]["mentions"]) if sorted_categories else None,
+                "coverage_distribution": {cat: data["mentions"] for cat, data in sorted_categories.items()},
+                "brand_coverage": {cat: data["brand_count"] for cat, data in sorted_categories.items()}
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Parts analysis error: {e}")
+        return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
+
+@app.route('/api/analytics/competitive', methods=['GET'])
+def competitive_intelligence():
+    """Competitive analysis and market gaps"""
+    try:
+        qdrant_url = get_valid_qdrant_url()
+        
+        # Get data for competitive analysis
+        scroll_url = f"{qdrant_url}/collections/{COLLECTION_NAME}/points/scroll"
+        response = requests.post(scroll_url, json={"limit": 1000, "with_payload": True}, timeout=30)
+        
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch data"}), 500
+            
+        points = response.json().get("result", {}).get("points", [])
+        
+        # Competitive landscape analysis
+        competitors = {
+            "Premium": ["BMW", "Mercedes", "Audi", "Lexus", "Infiniti"],
+            "Mass Market": ["Toyota", "Honda", "Ford", "Chevrolet", "Nissan"],
+            "European": ["Volkswagen", "Volvo", "Peugeot", "Renault", "Fiat"],
+            "Luxury": ["Porsche", "Jaguar", "Land Rover", "Cadillac", "Lincoln"]
+        }
+        
+        competitive_analysis = {}
+        
+        for segment, brands in competitors.items():
+            competitive_analysis[segment] = {
+                "total_mentions": 0,
+                "brands": {},
+                "market_share_proxy": 0,
+                "data_coverage": 0
+            }
+            
+            for brand in brands:
+                brand_mentions = 0
+                brand_files = set()
+                
+                for point in points:
+                    content = point.get("payload", {}).get("content", "").upper()
+                    if brand.upper() in content:
+                        brand_mentions += content.count(brand.upper())
+                        brand_files.add(point.get("payload", {}).get("file_name", ""))
+                
+                if brand_mentions > 0:
+                    competitive_analysis[segment]["brands"][brand] = {
+                        "mentions": brand_mentions,
+                        "file_coverage": len(brand_files),
+                        "files": list(brand_files)
+                    }
+                    competitive_analysis[segment]["total_mentions"] += brand_mentions
+            
+            # Calculate market share proxy and data coverage
+            competitive_analysis[segment]["market_share_proxy"] = competitive_analysis[segment]["total_mentions"]
+            competitive_analysis[segment]["data_coverage"] = len([b for b in brands if b in competitive_analysis[segment]["brands"]])
+        
+        # Market gap analysis
+        all_mentioned_brands = set()
+        for segment_data in competitive_analysis.values():
+            all_mentioned_brands.update(segment_data["brands"].keys())
+        
+        all_competitor_brands = set()
+        for brands in competitors.values():
+            all_competitor_brands.update(brands)
+        
+        market_gaps = list(all_competitor_brands - all_mentioned_brands)
+        
+        return jsonify({
+            "analysis_type": "competitive_intelligence",
+            "segments": competitive_analysis,
+            "market_insights": {
+                "dominant_segment": max(competitive_analysis.keys(), key=lambda x: competitive_analysis[x]["total_mentions"]) if competitive_analysis else None,
+                "market_gaps": market_gaps,
+                "coverage_ratio": len(all_mentioned_brands) / len(all_competitor_brands) if all_competitor_brands else 0,
+                "total_competitive_mentions": sum(seg["total_mentions"] for seg in competitive_analysis.values())
+            },
+            "recommendations": [
+                f"Focus on {market_gaps[0]} data collection" if market_gaps else "Maintain current coverage",
+                "Expand premium segment analysis" if competitive_analysis.get("Premium", {}).get("total_mentions", 0) < 100 else "Premium segment well covered",
+                "Investigate mass market opportunities" if competitive_analysis.get("Mass Market", {}).get("total_mentions", 0) < 200 else "Mass market adequately covered"
+            ]
+        })
+        
+    except Exception as e:
+        logger.error(f"Competitive analysis error: {e}")
+        return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
+
+@app.route('/api/analytics/dashboard', methods=['GET'])
+def analytics_dashboard():
+    """Comprehensive analytics dashboard data"""
+    try:
+        qdrant_url = get_valid_qdrant_url()
+        
+        # Get collection stats
+        stats_url = f"{qdrant_url}/collections/{COLLECTION_NAME}"
+        stats_response = requests.get(stats_url, timeout=10)
+        
+        # Get sample data for quick analysis
+        scroll_url = f"{qdrant_url}/collections/{COLLECTION_NAME}/points/scroll"
+        data_response = requests.post(scroll_url, json={"limit": 500, "with_payload": True}, timeout=20)
+        
+        if stats_response.status_code != 200 or data_response.status_code != 200:
+            return jsonify({"error": "Failed to fetch dashboard data"}), 500
+        
+        stats = stats_response.json().get("result", {})
+        points = data_response.json().get("result", {}).get("points", [])
+        
+        # Quick analytics
+        file_types = {}
+        data_sources = {}
+        content_volume = 0
+        
+        for point in points:
+            payload = point.get("payload", {})
+            file_name = payload.get("file_name", "")
+            file_type = payload.get("file_type", "unknown")
+            content = payload.get("content", "")
+            
+            # File type distribution
+            file_types[file_type] = file_types.get(file_type, 0) + 1
+            
+            # Data source analysis
+            if "TecDoc" in file_name:
+                data_sources["TecDoc"] = data_sources.get("TecDoc", 0) + 1
+            elif "AutoCare" in file_name or "20250227" in file_name:
+                data_sources["AutoCare"] = data_sources.get("AutoCare", 0) + 1
+            elif "MM" in file_name:
+                data_sources["Motor Manager"] = data_sources.get("Motor Manager", 0) + 1
+            elif "Polk" in file_name:
+                data_sources["Polk"] = data_sources.get("Polk", 0) + 1
+            else:
+                data_sources["Other"] = data_sources.get("Other", 0) + 1
+            
+            content_volume += len(content)
+        
+        return jsonify({
+            "dashboard_data": {
+                "collection_stats": {
+                    "total_points": stats.get("points_count", 0),
+                    "vector_size": stats.get("config", {}).get("params", {}).get("vectors", {}).get("size", 0),
+                    "segments": stats.get("segments_count", 0)
+                },
+                "data_distribution": {
+                    "file_types": file_types,
+                    "data_sources": data_sources,
+                    "content_volume_mb": round(content_volume / (1024 * 1024), 2)
+                },
+                "quick_insights": {
+                    "primary_source": max(data_sources.keys(), key=lambda x: data_sources[x]) if data_sources else "Unknown",
+                    "dominant_file_type": max(file_types.keys(), key=lambda x: file_types[x]) if file_types else "Unknown",
+                    "data_richness_score": min(100, (len(points) / 10)),  # Simple scoring
+                    "coverage_completeness": round((len(data_sources) / 5) * 100, 1)  # Out of 5 expected sources
+                }
+            },
+            "kpis": {
+                "data_points": stats.get("points_count", 0),
+                "sources_integrated": len(data_sources),
+                "file_types_supported": len(file_types),
+                "search_ready": True,
+                "last_updated": datetime.now().isoformat()
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Dashboard error: {e}")
+        return jsonify({"error": f"Dashboard failed: {str(e)}"}), 500
 
 @app.route('/api/import', methods=['POST'])
 def start_import():
