@@ -232,7 +232,7 @@ def start_import():
         collection_name = data.get('collection_name', COLLECTION_NAME)
         selected_files = data.get('selected_files', [])
         
-        logger.info(f"🚀 STARTING ACTUAL IMPORT for collection: {collection_name}")
+        logger.info(f"🚀 STARTING ACTUAL IMPORT PROCESS for collection: {collection_name}")
         
         # Start the import process in background (inline - no subprocess)
         import threading
