@@ -13,17 +13,24 @@ import time
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
-from flask import Flask, request, jsonify, render_template_string
-from flask_cors import CORS
-import requests
+try:
+    from flask import Flask, request, jsonify, render_template_string
+    from flask_cors import CORS
+    import requests
+    print("✅ All imports successful")
+except ImportError as e:
+    print(f"❌ Import error: {e}")
+    raise
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
+print("🔧 Initializing Flask app...")
 app = Flask(__name__)
 CORS(app, origins=["*"])  # Allow all origins for cloud deployment
+print("✅ Flask app initialized with CORS")
 
 # Configuration
 QDRANT_URL = os.getenv('QDRANT_URL', 'http://34.40.104.64:6333')
@@ -270,4 +277,8 @@ def start_import():
 
 if __name__ == '__main__':
     # For local development
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5005)), debug=False)
+    port = int(os.getenv('PORT', 5005))
+    print(f"🚀 Starting AAI Lightweight Backend on port {port}")
+    print(f"🗄️ Qdrant URL: {get_valid_qdrant_url()}")
+    print(f"📊 Collection: {COLLECTION_NAME}")
+    app.run(host='0.0.0.0', port=port, debug=False)
