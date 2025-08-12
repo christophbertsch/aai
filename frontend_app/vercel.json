@@ -17,6 +17,5 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "functions": {},
   "framework": "vite"
 }
