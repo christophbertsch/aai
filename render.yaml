@@ -3,7 +3,7 @@ services:
     name: aai-lightweight-backend
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 aai_lightweight_backend:app
+    startCommand: python aai_lightweight_backend.py
     envVars:
       - key: QDRANT_URL
         value: http://34.40.104.64:6333
