@@ -40,7 +40,7 @@ const ImportPage = () => {
 
   const loadFileDiscovery = async () => {
     try {
-      const discovery = await apiService.scanFiles()
+      const discovery = await apiService.discoverFiles()
       setFileDiscovery(discovery.files || [])
       setLogs(prev => [...prev, {
         timestamp: new Date().toISOString(),
