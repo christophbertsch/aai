@@ -1,8 +1,20 @@
 # Vercel Deployment Guide for AAI Data Import System
 
-## 🚨 Current Issue: 404 NOT_FOUND
+## 🚨 FIXED: Build Issues Resolved
 
-The 404 error you're seeing indicates that the Vercel deployment is not properly configured. Here's how to fix it:
+✅ **Latest Update**: Fixed the "vite: command not found" error by moving build dependencies to the correct location.
+
+## 🔧 Two Issues Fixed
+
+### Issue 1: Build Dependencies ✅ FIXED
+- **Problem**: Vite was in `devDependencies` but Vercel needs it in `dependencies`
+- **Solution**: Moved all build tools to `dependencies` in package.json
+- **Status**: ✅ Resolved in latest commit
+
+### Issue 2: Root Directory Configuration ⚠️ NEEDS YOUR ACTION
+- **Problem**: Vercel is looking in wrong directory (repository root instead of `frontend_app/`)
+- **Solution**: Update Vercel project settings (see below)
+- **Status**: ⚠️ Requires manual configuration in Vercel dashboard
 
 ## 🔧 Step-by-Step Fix
 
