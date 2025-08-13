@@ -25,3 +25,9 @@ qdrant
 *.xml
 *.pdf
 data/aai/
+
+# TecDoc Database Files
+*.db
+*.sqlite
+*.sqlite3
+tecdoc_data.*
